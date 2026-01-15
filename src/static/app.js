@@ -865,37 +865,43 @@ document.addEventListener("DOMContentLoaded", () => {
   const darkModeToggle = document.getElementById("dark-mode-toggle");
   const darkModeIcon = document.getElementById("dark-mode-icon");
 
-  // Check for saved dark mode preference
-  function checkDarkModePreference() {
-    const darkModeEnabled = localStorage.getItem("darkMode") === "enabled";
-    if (darkModeEnabled) {
-      document.body.classList.add("dark-mode");
-      darkModeIcon.textContent = "☀️";
-    } else {
-      document.body.classList.remove("dark-mode");
-      darkModeIcon.textContent = "🌙";
+  // Only initialize dark mode if elements exist
+  if (darkModeToggle && darkModeIcon) {
+    // Update dark mode icon based on state
+    function updateDarkModeIcon(isDarkMode) {
+      darkModeIcon.textContent = isDarkMode ? "☀️" : "🌙";
     }
-  }
 
-  // Toggle dark mode
-  function toggleDarkMode() {
-    document.body.classList.toggle("dark-mode");
-    const isDarkMode = document.body.classList.contains("dark-mode");
-
-    if (isDarkMode) {
-      localStorage.setItem("darkMode", "enabled");
-      darkModeIcon.textContent = "☀️";
-    } else {
-      localStorage.setItem("darkMode", "disabled");
-      darkModeIcon.textContent = "🌙";
+    // Check for saved dark mode preference
+    function checkDarkModePreference() {
+      const darkModeEnabled = localStorage.getItem("darkMode") === "enabled";
+      if (darkModeEnabled) {
+        document.body.classList.add("dark-mode");
+      } else {
+        document.body.classList.remove("dark-mode");
+      }
+      updateDarkModeIcon(darkModeEnabled);
     }
+
+    // Toggle dark mode
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      const isDarkMode = document.body.classList.contains("dark-mode");
+
+      if (isDarkMode) {
+        localStorage.setItem("darkMode", "enabled");
+      } else {
+        localStorage.setItem("darkMode", "disabled");
+      }
+      updateDarkModeIcon(isDarkMode);
+    }
+
+    // Event listener for dark mode toggle
+    darkModeToggle.addEventListener("click", toggleDarkMode);
+
+    // Initialize dark mode preference
+    checkDarkModePreference();
   }
-
-  // Event listener for dark mode toggle
-  darkModeToggle.addEventListener("click", toggleDarkMode);
-
-  // Initialize dark mode preference
-  checkDarkModePreference();
 
   // Initialize app
   checkAuthentication();
